@@ -1,0 +1,5 @@
+2020-12-02 06:57:05,156 - root - DEBUG - Using JSON from file : signal_database.json
+2020-12-02 06:57:05,156 - root - ERROR - Exception <class 'FileNotFoundError'> occurred
+2020-12-02 06:57:39,132 - root - DEBUG - Using JSON from file : signal_database.json
+2020-12-02 06:57:47,170 - root - ERROR - Exception <class 'FileNotFoundError'> occurred
+2020-12-02 06:57:54,137 - root - DEBUG - Using JSON from file : signal_database.json
