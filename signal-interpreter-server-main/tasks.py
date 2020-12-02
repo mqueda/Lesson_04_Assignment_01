@@ -66,11 +66,13 @@ def call_integration_tests(_):
     cmd = f"python -m pytest tests/integration/integration_test.py"
     subprocess.call(cmd, shell=True)
 
+
 @task  # pylint: disable=undefined-variable
 def call_start_server(_):
     '''
     lint method
     :return:
     '''
-    cmd = f"python -m signal_interpreter_server.main --file_path signal_database.json"
+    cmd = f"python -m signal_interpreter_server.main" \
+          f" --file_path signal_database.json"
     subprocess.call(cmd, shell=True)
