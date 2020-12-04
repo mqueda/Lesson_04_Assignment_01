@@ -3,8 +3,12 @@ Module for implementing the routes
 """
 import logging
 from flask import Flask, request, jsonify, abort
-from signal_interpreter_server.json_parser import LoadAndParse
-from cfg.exceptions import JsonParserError_KeyError
+try:
+    from json_parser import LoadAndParse
+    from exceptions import JsonParserErrorKeyError  # pragma: no cover
+except ImportError:
+    from signal_interpreter_server.json_parser import LoadAndParse
+    from signal_interpreter_server.exceptions import JsonParserErrorKeyError
 
 
 signal_interpreter_app = Flask(__name__)
@@ -35,7 +39,7 @@ def interpret_signal():
         return (jsonfy_data), 201
     except Exception as err:
         logging.error("Exception %s occurred", str(err))
-        raise JsonParserError_KeyError() from err
+        raise JsonParserErrorKeyError() from err
 
 
 @signal_interpreter_app.errorhandler(500)

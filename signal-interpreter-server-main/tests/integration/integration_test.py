@@ -1,18 +1,27 @@
 """
 Module for implementing the integration tests
 """
+import os
 import sys
 import json
 from unittest.mock import patch, call
 import pytest
 from signal_interpreter_server.main import jsonparser
 from signal_interpreter_server.routes import signal_interpreter_app
-from cfg.exceptions import JsonParserError_FileNotFoundError,\
-    JsonParserError_DecodeError
+from signal_interpreter_server.exceptions import\
+    JsonParserErrorFileNotFoundError, JsonParserErrorDecodeError
+
+
+test_basic_json_file = (os.path.join
+                        (os.path.abspath(os.path.dirname(__file__)),
+                         "fixtures\\test_basic.json"))
+test_bad_json_file = (os.path.join
+                      (os.path.abspath(os.path.dirname(__file__)),
+                       "fixtures\\BAD_test_basic.json"))
 
 
 @patch.object(sys, "argv", ["signal_interpreter_server", "--file_path",
-                            "tests/integration/fixtures/test_basic.json"])
+                            test_basic_json_file])
 @patch('logging.Logger.debug')
 def test_application_service_11_debug(mock_debug):
     """
@@ -35,7 +44,7 @@ def test_application_service_11_debug(mock_debug):
 
 
 @patch.object(sys, "argv", ["signal_interpreter_server", "--file_path",
-                            "tests/integration/fixtures/test_basic.json"])
+                            test_basic_json_file])
 @patch('logging.Logger.info')
 def test_application_service_27_info(mock_info):
     """
@@ -53,7 +62,7 @@ def test_application_service_27_info(mock_info):
 
 
 @patch.object(sys, "argv", ["signal_interpreter_server", "--file_path",
-                            "tests/integration/fixtures/test_basic.json"])
+                            test_basic_json_file])
 @patch('logging.Logger.warning')
 def test_application_wrong_id_info(mock_warning):
     """
@@ -71,7 +80,7 @@ def test_application_wrong_id_info(mock_warning):
 
 
 @patch.object(sys, "argv", ["signal_interpreter_server", "--file_path",
-                            "tests/integration/fixtures/test_basic.json"])
+                            test_basic_json_file])
 @patch('logging.Logger.error')
 def test_application_wrong_json_data_error(mock_error):
     """
@@ -88,14 +97,14 @@ def test_application_wrong_json_data_error(mock_error):
 
 
 @patch.object(sys, "argv", ["signal_interpreter_server", "--file_path",
-                            "tests/integration/fixtures/xxxxx_xxxxx.json"])
+                            "fixtures/xxxxx_xxxxx.json"])
 def test_application_wrong_json_file_name_error():
     """
     Action : Test the server correct error check
     Expected Results : Test finished with status "Passed".
     Returns: N/A.
     """
-    with pytest.raises(JsonParserError_FileNotFoundError):
+    with pytest.raises(JsonParserErrorFileNotFoundError):
         jsonparser.load_file(sys.argv[2])
         signal_interpreter_app.test_client().post('/',
                                                   data=json.dumps
@@ -105,14 +114,14 @@ def test_application_wrong_json_file_name_error():
 
 
 @patch.object(sys, "argv", ["signal_interpreter_server", "--file_path",
-                            "tests/integration/fixtures/BAD_test_basic.json"])
+                            test_bad_json_file])
 def test_application_wrong_json_file_content_error():
     """
     Action : Test the server correct error check.
     Expected Results : Test finished with status "Passed".
     Returns: N/A.
     """
-    with pytest.raises(JsonParserError_DecodeError):
+    with pytest.raises(JsonParserErrorDecodeError):
         jsonparser.load_file(sys.argv[2])
         signal_interpreter_app.test_client().post('/',
                                                   data=json.dumps
@@ -130,8 +139,8 @@ def test_load_file(fixture_json_file_path):
     returned_data = jsonparser.load_file(fixture_json_file_path)
     assert returned_data['services'][0]['title'] == 'ECU Reset'
     assert returned_data['services'][1]['id'] == '27'
-    with pytest.raises(JsonParserError_FileNotFoundError):
-        jsonparser.load_file('tests/integration/fixtures/wrond_file_path.json')
+    with pytest.raises(JsonParserErrorFileNotFoundError):
+        jsonparser.load_file('fixtures/wrong_file_path.json')
 
 
 def test_return_service_01(fixture_json_file):

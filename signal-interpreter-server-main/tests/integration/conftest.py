@@ -1,6 +1,7 @@
 """
 Module for implementing the conftest file
 """
+import os
 import pytest
 from signal_interpreter_server.json_parser import LoadAndParse
 
@@ -12,7 +13,10 @@ def fixture_json_file_path():
     Expected Correct json file path returned.
     Returns: json file path.
     """
-    return 'tests/integration/fixtures/test_basic.json'
+    test_basic_json_file = (os.path.join
+                            (os.path.abspath(os.path.dirname(__file__)),
+                             "fixtures\\test_basic.json"))
+    return test_basic_json_file
 
 
 @pytest.fixture(name="fixture_json_file")
