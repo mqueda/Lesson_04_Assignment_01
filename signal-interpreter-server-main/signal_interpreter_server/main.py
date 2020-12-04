@@ -12,7 +12,7 @@ except ImportError:
     from signal_interpreter_server.routes import\
         signal_interpreter_app, jsonparser
 
-# Remeber to set the parameter " --file_path ..\signal_database.json "
+# Remeber to set the parameter " --file_path signal_database.json "
 
 os.chdir(os.path.dirname(os.path.dirname
                          (os.path.realpath(__file__))))
