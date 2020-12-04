@@ -1,11 +1,15 @@
 """
 Module for implementing the unit tests
 """
+import os
 from unittest.mock import patch
 import pytest
 from signal_interpreter_server.routes import signal_interpreter_app
 from signal_interpreter_server.json_parser import LoadAndParse
-from cfg.exceptions import JsonParserError_KeyError
+from signal_interpreter_server.exceptions import JsonParserErrorKeyError
+
+
+os.chdir(os.path.join(os.path.abspath(os.path.dirname(__file__))))
 
 
 def test_correct_data():
@@ -40,5 +44,5 @@ def test_wrong_data_raise():
             return_value="Service not suported!"):
         with signal_interpreter_app_instance as client:
             payload = {"service": "XXXXX"}
-            with pytest.raises(JsonParserError_KeyError):
+            with pytest.raises(JsonParserErrorKeyError):
                 client.post("/", json=payload)

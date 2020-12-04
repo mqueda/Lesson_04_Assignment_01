@@ -3,8 +3,12 @@ Module for implementing the json parser
 """
 import logging
 import json
-from cfg.exceptions import JsonParserError_FileNotFoundError,\
-    JsonParserError_DecodeError
+try:
+    from exceptions import \
+        JsonParserErrorFileNotFoundError, JsonParserErrorDecodeError
+except ImportError:
+    from signal_interpreter_server.exceptions import \
+        JsonParserErrorFileNotFoundError, JsonParserErrorDecodeError
 
 
 logger = logging.getLogger(__name__)
@@ -34,11 +38,11 @@ class LoadAndParse:
                 return self.data
         except FileNotFoundError as err:
             logging.error("Exception %s occurred", FileNotFoundError)
-            raise JsonParserError_FileNotFoundError() from err
+            raise JsonParserErrorFileNotFoundError() from err
         except json.decoder.JSONDecodeError as err:
             logging.error("Exception %s occurred",
                           json.decoder.JSONDecodeError)
-            raise JsonParserError_DecodeError() from err
+            raise JsonParserErrorDecodeError() from err
 
     def return_signal_by_title(self, reqid):
         """
